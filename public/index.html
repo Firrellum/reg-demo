@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h2>Firrel Software</h2>
+        <div id="userProfile" style="display: none;">
+            <p><span id="userName"></span></p>
+            <br />
+            <button onclick="logout()">Logout</button>
+        </div>
+    </header>
+    <div id="portal-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2>Login</h2>
+            <br />
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button id="loginBtn" onclick="login()">Login</button>
+            <p id="loginError" class="error"></p>
+            <div id="loginLoader" class=""></div>
+            <br />
+            <p><a href="#" id="toRegister">Create an account</a> | 
+            <a href="#" id="toForgot">Forgot password?</a></p>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" style="display: none;">
+            <h2>Register</h2>
+            <br />
+            <input type="text" id="regName" placeholder="Name" required>
+            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="password" id="regPassword" placeholder="Password" required>
+            <button id="regBtn" onclick="register()">Register</button>
+            <p id="regError" class="error"></p>
+            <div id="regLoader" class=""></div>
+            <br />
+            <p><a href="#" id="toLogin">Already have an account? Login</a></p>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotPasswordForm" style="display: none;">
+            <h2>Forgot Password</h2>
+            <br />
+            <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+            <button id="forgotBtn" onclick="sendResetLink()">Send Reset Link</button>
+            <p id="forgotError" class="error"></p>
+            <div id="forgotLoader" class=""></div>
+            <br />
+            <p><a href="#" id="backToLogin">Back to Login</a></p>
+        </div>
+
+        <!-- Reset Password Form -->
+        <div id="resetPasswordForm" style="display: none;">
+            <h2>Reset Password</h2>
+            <br />
+            <input type="hidden" id="resetToken">
+            <input type="password" id="newPassword" placeholder="New Password" required>
+            <button id="resetBtn" onclick="resetPassword()">Reset Password</button>
+            <p id="resetError" class="error"></p>
+        </div>
+
+        <!-- User Profile (Shown After Login) -->
+        
+        <div id="log"></div>
+    </div>
+    <div id="content">  
+        <h2>Content</h2>
+        <p>Welcome to the content page. You must be logged in to view this page.</p>
+    </div>
+    <footer>
+        <p>&copy; <span id="year"></span> Firrel Software</p>
+    </footer>
+
+    <script src="js.js"></script>
+</body>
+</html>
