@@ -5,8 +5,7 @@ import authRoutes from "./routes/auth.js";
 import session from "express-session";
 import pgSession from "connect-pg-simple";
 import pool from "./db.js";
-import userRoutes from "./routes/user.js"; // Ensure this line is present
-
+import userRoutes from "./routes/user.js"; 
 
 dotenv.config();
 
@@ -31,6 +30,6 @@ app.use(
 
 // Authentication routes
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes); // Mount user routes
+app.use("/user", userRoutes); 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

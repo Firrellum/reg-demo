@@ -53,8 +53,8 @@ async function register() {
     if (!res.ok) {
         showError("regError", data.message || "Registration failed.");
     } else {
-        log.innerHTML = "Registration successful! Please log in.";
-        switchToLogin();
+        log.innerHTML = "Registration successful! Please Validate your email. Then Login.";
+        // switchToLogin();
     }
 }
 
@@ -64,7 +64,7 @@ async function login() {
     const password = document.getElementById("loginPassword").value;
 
     toggleLoading("loginBtn", "loginLoader", true);
-    showError("loginError", ""); // Clear errors
+    showError("loginError", ""); 
 
     const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
@@ -90,19 +90,24 @@ async function updateProfile() {
     const name = document.getElementById("profileName").value;
     const email = document.getElementById("profileEmail").value;
     const password = document.getElementById("profilePassword").value;
+    const color = document.getElementById("profileAvatar").value;
+
+    toggleLoading("updateBtn", "updateLoader", true);
 
     const res = await fetch(`${API_URL}/user/profile/update`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, color }),
         credentials: "include",
     });
 
     const data = await res.json();
-    document.getElementById("profileMessage").innerText = data.message || data.error;
-
+    toggleLoading("updateBtn", "updateLoader", false);
+    document.getElementById("log").innerText = data.message || data.error;
+    
     if (res.ok) {
         alert("Profile updated successfully!");
+        loadProfile();
     }
 }
 
@@ -199,10 +204,11 @@ async function loadProfile() {
     if (res.ok) {
         const data = await res.json();
         // console.log(data);
-        document.getElementById("avatar").innerHTML = `<span>${data.user.name.charAt(0)}</span>`;
+        document.getElementById("avatar").innerHTML = `<span>${data.user.name.charAt(0).toUpperCase()}</span>`;
         document.getElementById("avatar").style.backgroundColor = data.user.color;
         document.getElementById("profileName").value = data.user.name;
         document.getElementById("profileEmail").value = data.user.email;
+        document.getElementById("profileAvatar").value = data.user.color;
         document.getElementById("profile").style.display = "block";
         document.getElementById("userProfile").style.display = "block";
         document.getElementById("loginForm").style.display = "none";

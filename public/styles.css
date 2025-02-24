@@ -8,14 +8,67 @@
 
 :root {
     --primary-color: #ff6600;
+    --primary-color-negative: #0099ff;
+
     --secondary-color: #000000;
+    --secondary-color-negative: #ffffff;
+
     --background-color: #f8f9fa;
+    --background-color-negative: #070606;
+
     --text-color: #000000;
+    --text-color-negative: #ffffff;
+
     --error-color: red;
+    
     --input-border-color: #ccc;
+    --input-border-color-negative: #333;
+
     --button-hover-color: #cc5200;
+    --button-hover-color-negative: #339dff;
+
     --loader-border-color: #f3f3f3;
+    --loader-border-color-negative: #0c0c0c;
+
     --loader-border-top-color: #ff6600;
+    --loader-border-top-color-negative: #0099ff;
+
+    --gradient-1: #370270;
+    --gradient-1-negative: #ffffff;
+    --gradient-2: #070707;
+    --gradient-2-negative: #a3a3a3;
+    --gradient-3: #160038;
+    --gradient-3-negative: #cccbcb;
+
+    --body-color: #ccc;
+    --body-color-negative: #333;
+
+    --header-bg-color: #38015234;
+    --header-bg-color-negative: #ffffff;
+
+    --header-text-color: #ffffff;
+    --header-text-color-negative: #000000;
+
+    --avatar-text-shadow: 2px 2px 5px #000;
+    --avatar-text-shadow-negative: 2px 2px 5px #1a1919;
+
+    --dropdown-bg-color: #7d01a336;
+    --dropdown-bg-color-negative: #ffffff33;
+    --dropdown-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --dropdown-box-shadow-negative: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --dropdown-border-color: 1px solid #ccc;
+    --dropdown-border-color-negative: 1px solid #333;
+    --dropdown-menu-hover: #56038611;
+    --dropdown-menu-hover-negative: #a9fc79ee;
+
+    --input-bg-color: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(117, 137, 150, 0.25) 100%);
+    --input-bg-color-negative: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(117, 137, 150, 0.75) 100%);
+
+    --loader-border-color: #f3f3f3 #f3f3f3 transparent;
+    --loader-border-color-negative: #0c0c0c #0c0c0c transparent;
+    --loader-border-after-color: transparent #ff6600 #ff6600;
+    --loader-border-after-color-negative: transparent #0099ff #0099ff;
+
 }
 
 /* General styles */
@@ -26,10 +79,13 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(-25deg, #370270, #070707, #160038);
+    background: linear-gradient(-25deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
     background-size: 200% 200%;
     animation: pulseBackground 15s infinite ease-in-out;
-    color: #ccc;
+    color: var(--body-color);
+}
+.body-negative{
+    background: linear-gradient(-25deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
 }
 
 @keyframes pulseBackground {
@@ -56,8 +112,8 @@ header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    background-color: #38015234;
-    color: white;
+    background-color: var(--header-bg-color);
+    color: var(--header-text-color);
     text-align: left;
     padding: 15px 0;
     font-size: 24px;
@@ -89,23 +145,21 @@ header p{
     align-items: center;
     margin: auto;
     cursor: pointer;
-    border: 1px solidvar;
+    border: 2px solid var(--loader-border-top-color);
+    text-shadow: var(--avatar-text-shadow);
 }
 
 .dropdown-menu {
     position: absolute;
     top: 150%;
     right: 20px;
-    background-color: rgba(125, 1, 163, 0.212);
-    /* border: 1px solid #ddd; */
-    border-bottom: 1px solid #ccc;
-    /* border-right: 1px solid #ccc; */
-    border-top: 1px solid #ccc;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--dropdown-bg-color);
+    border-bottom: var(--dropdown-border-color);
+    border-top: var(--dropdown-border-color);
+    box-shadow: var(--dropdown-box-shadow);
     border-radius: 5px;
     overflow: hidden;
     z-index: 1000;
-    
 }
 
 .dropdown-menu a,
@@ -132,19 +186,6 @@ header p{
     margin: 0 auto;
     opacity: 0.5;
 }
-
-/* #userProfile button {
-    padding: 5px 10px;
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-#userProfile button:hover {
-    background-color: darkred;
-} */
 
 footer{
     position:fixed;
@@ -275,7 +316,7 @@ a:visited{
     display: inline-block;
     position: relative;
     border: 3px solid;
-    border-color: #FFF #FFF transparent;
+    border-color: var(--loader-border-color);
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
   }
@@ -289,7 +330,7 @@ a:visited{
     bottom: 0;
     margin: auto;
     border: 3px solid;
-    border-color: transparent #FF3D00 #FF3D00;
+    border-color: var(--loader-border-after-color);
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -315,3 +356,4 @@ a:visited{
     }
   }
       
+
