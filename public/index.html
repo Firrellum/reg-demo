@@ -32,7 +32,8 @@
         <div id="loginForm">
             <h2>Login</h2>
             <br />
-            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="email" id="loginEmail" placeholder="Email" oninput="validateEmail('loginEmail', 'login-error-message')" required>
+            <p id="login-error-message" class="error-message"></p>
             <input type="password" id="loginPassword" placeholder="Password" required>
             <button id="loginBtn" onclick="login()">Login</button>
             <p id="loginError" class="error"></p>
@@ -47,7 +48,8 @@
             <h2>Register</h2>
             <br />
             <input type="text" id="regName" placeholder="Name" required>
-            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="email" id="regEmail" placeholder="Email" oninput="validateEmail('regEmail', 'reg-error-message')" required>
+            <p id="reg-error-message" class="error-message"></p>
             <input type="password" id="regPassword" placeholder="Password" required>
             <button id="regBtn" onclick="register()">Register</button>
             <p id="regError" class="error"></p>
@@ -60,7 +62,8 @@
         <div id="forgotPasswordForm" style="display: none;">
             <h2>Forgot Password</h2>
             <br />
-            <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+            <input type="email" id="forgotEmail" placeholder="Enter your email" oninput="validateEmail('forgotEmail', 'forgot-error-message')" required>
+            <p id="forgot-error-message" class="error-message"></p>
             <button id="forgotBtn" onclick="sendResetLink()">Send Reset Link</button>
             <p id="forgotError" class="error"></p>
             <div id="forgotLoader" class=""></div>
@@ -79,17 +82,19 @@
         </div>
 
         <!-- User Profile (Shown After Login) -->
-        <div id="profile" style="display: none;">
-            <h2>Profile</h2>
-            <input type="text" id="profileName" placeholder="Name">
-            <input type="email" id="profileEmail" placeholder="Email">
-            <input type="color" id="profileAvatar" name="profileColor" value="#000000">
-            <input type="password" id="profilePassword" placeholder="New Password (optional)">
-            <button id="updateBtn" onclick="updateProfile()">Update Profile</button>
-            <div id="updateLoader" class=""></div>
-            <p id="profileMessage"></p>
-        </div>
+       
         <div id="log"></div>
+    </div>
+    <div id="profile" style="display: none;">
+        <h2>Profile</h2>
+        <input type="text" id="profileName" placeholder="Name">
+        <input type="email" id="profileEmail" oninput="validateEmail('profileEmail', 'update-error-message')" placeholder="Email">
+        <p id="update-error-message" class="error-message"></p>
+        <input type="color" id="profileAvatar" name="profileColor" value="#000000">
+        <input type="password" id="profilePassword" placeholder="New Password (optional)">
+        <button id="updateBtn" onclick="updateProfile()">Update Profile</button>
+        <div id="updateLoader" class=""></div>
+        <p id="profileMessage"></p>
     </div>
     <footer>
         <p>&copy; <span id="year"></span> Firrel Software</p>

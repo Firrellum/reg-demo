@@ -106,7 +106,7 @@ async function updateProfile() {
     document.getElementById("log").innerText = data.message || data.error;
     
     if (res.ok) {
-        alert("Profile updated successfully!");
+        alert(data.message);
         loadProfile();
     }
 }
@@ -213,7 +213,7 @@ async function loadProfile() {
         document.getElementById("userProfile").style.display = "block";
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("registerForm").style.display = "none";
-        portalContainer.style.display = "block";
+        portalContainer.style.display = "none";
         x.classList.remove('loader');
     }else{
         x.classList.remove('loader');
@@ -280,3 +280,16 @@ function setCurrentYear() {
 
 // Call the function to set the year
 setCurrentYear();
+
+function validateEmail(value, err) {
+    const emailInput = document.getElementById(value, err);
+    const errorMessage = document.getElementById(err);
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (emailInput.value.match(emailPattern) || emailInput.value === "") {
+        errorMessage.style.display = "none";
+    } else {
+        errorMessage.style.display = "block";
+        errorMessage.innerText = 'Invalid email';
+    }
+}

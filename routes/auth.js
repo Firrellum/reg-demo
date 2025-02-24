@@ -9,8 +9,6 @@ dotenv.config();
 
 const router = express.Router(); 
 
-
-
 function generateRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -38,7 +36,7 @@ router.post("/register", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const color = generateRandomColor();
-        // console.log(color);
+
         const verificationToken = crypto.randomBytes(32).toString("hex");
         const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); 
 
@@ -46,8 +44,6 @@ router.post("/register", async (req, res) => {
             "INSERT INTO users (name, email, password, color, verification_token, verification_expiry) VALUES ($1, $2, $3, $4, $5, $6)",
             [name, email, hashedPassword, color, verificationToken, verificationExpiry]
         );
-
-        // const verificationLink = `http://localhost:3000/verify.html?token=${verificationToken}`;
 
         const verifyEmail = getEmail('verify', { name: name, link: `http://localhost:3000/verify.html?token=${verificationToken}` });
 
@@ -142,7 +138,7 @@ router.get("/verify-email", async (req, res) => {
 
         const user = userResult.rows[0];
 
-        await pool.query("UPDATE users SET verification_token = NULL, verification_expiry = NULL, is_verified = TRUE WHERE id = $1", [user.id]);
+        await pool.query("UPDATE users SET verification_token = NULL, verification_expiry = NULL, is_verified = TRUE, new_email = NULL WHERE id = $1", [user.id]);
 
         res.json({ message: "Email verified successfully" });
     } catch (error) {
@@ -171,7 +167,7 @@ router.get("/check-session", (req, res) => {
     }
 });
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
     service: "gmail",   
     auth: {
         user: process.env.EMAIL_USER,
@@ -179,14 +175,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// console.log(`User: ${process.env.EMAIL_USER}`);
-// console.log(`Pass: '${process.env.EMAIL_PASS}'`);
-
 // Forgot Password (Generate Reset Token)
 router.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-    // console.log(user.rows[0].name);
     if (!user.rows.length) return res.status(400).json({ message: "User not found" });
 
     const token = crypto.randomBytes(32).toString("hex");
@@ -194,8 +186,6 @@ router.post("/forgot-password", async (req, res) => {
         "UPDATE users SET reset_token = $1, reset_expiry = NOW() + INTERVAL '1 hour' WHERE email = $2",
         [token, email]
     );
-
-    // const resetLink = `http://localhost:3000/reset.html?token=${token}`;
 
     const resetEmail = getEmail('reset', { name: user.rows[0].name, link: `http://localhost:3000/reset.html?token=${token}` });
 
@@ -237,8 +227,7 @@ router.post("/reset-password", async (req, res) => {
 
 export default router; 
 
-
-function getEmail(type, data) {
+export function getEmail(type, data) {
     const { name, link } = data;
     const isReset = type === 'reset';
 
