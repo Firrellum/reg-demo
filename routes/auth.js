@@ -11,9 +11,18 @@ const router = express.Router();
 
 
 
+function generateRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
 // Register User
 router.post("/register", async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, color } = req.body;
 
     if (!name || !email || !password) {
         return res.status(400).json({ error: "All fields are required" });
@@ -28,9 +37,12 @@ router.post("/register", async (req, res) => {
         const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+        const color = generateRandomColor();
+        console.log(color);
+
         await pool.query(
-            "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
-            [name, email, hashedPassword]
+            "INSERT INTO users (name, email, password, color) VALUES ($1, $2, $3, $4)",
+            [name, email, hashedPassword, color]
         );
 
         res.status(201).json({ message: "User registered successfully" });
@@ -42,7 +54,7 @@ router.post("/register", async (req, res) => {
 
 // Login
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ error: "All fields are required" });
@@ -60,7 +72,9 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ error: "Invalid email or password" });
         }
 
-        req.session.user = { id: user.id, name: user.name, email: user.email };
+        req.session.user = { id: user.id, name: user.name, email: user.email, color: user.color };
+        req.session.save();
+
 
         res.json({ message: "Login successful", user: req.session.user });
     } catch (error) {
@@ -113,7 +127,7 @@ router.post("/forgot-password", async (req, res) => {
         [token, email]
     );
 
-    const resetLink = `https://firrel-reg.loca.lt/reset.html?token=${token}`;
+    const resetLink = `http://localhost:3000/reset.html?token=${token}`;
 
     const mailOptions = {
         from: "Firrel Software <no-reply@firrelsoftware.com>",

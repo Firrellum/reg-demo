@@ -5,15 +5,15 @@ dotenv.config();
 
 const { Pool } = pkg;
 
-const client = new Pool({
+const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }, // Required for cloud-hosted DBs
 });
-client.connect((err) => {
+pool.connect((err) => {
     if (err) {
         console.error('not connected', err.stack);
     } else {
         console.log('connected');
     }
 });
-export default client;
+export default pool;

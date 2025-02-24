@@ -22,7 +22,7 @@ const pgStore = pgSession(session);
 app.use(
     session({
         store: new pgStore({ pool }),
-        secret: process.env.SESSION_SECRET, // Change this to a strong secret
+        secret: process.env.SESSION_SECRET, 
         resave: false,
         saveUninitialized: false,
         cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 } // 1 day

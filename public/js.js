@@ -1,4 +1,4 @@
-const API_URL = "https://firrel-reg.loca.lt";
+const API_URL = "http://localhost:3000";
 
 const log = document.getElementById("log");
 const portalContainer = document.getElementById("portal-container");
@@ -14,6 +14,23 @@ function toggleLoading(buttonId, loaderId, isLoading) {
     document.getElementById(loaderId).style.display = isLoading ? x.classList.add('loader') : x.classList.remove('loader');
     // document.getElementById(loaderId).style.display = isLoading ? "block" : "none";
 }
+
+function toggleDropdown() {
+    var dropdown = document.getElementById("dropdown");
+    if (dropdown.style.display === "none" || dropdown.style.display === "") {
+        dropdown.style.display = "block";
+    } else {
+        dropdown.style.display = "none";
+    }
+}
+
+document.addEventListener("click", function(event) {
+    var dropdown = document.getElementById("dropdown");
+    var avatar = document.getElementById("avatar");
+    if (!dropdown.contains(event.target) && !avatar.contains(event.target)) {
+        dropdown.style.display = "none";
+    }
+});
 
 // Register
 async function register() {
@@ -58,13 +75,44 @@ async function login() {
 
     const data = await res.json();
     toggleLoading("loginBtn", "loginLoader", false);
-    portalContainer.style.display = "none";
+    
 
     if (!res.ok) {
         showError("loginError", data.message || "Login failed.");
     } else {
+        portalContainer.style.display = "none";
         log.innerHTML = "Login successful!";
         loadProfile();
+    }
+}
+
+async function updateProfile() {
+    const name = document.getElementById("profileName").value;
+    const email = document.getElementById("profileEmail").value;
+    const password = document.getElementById("profilePassword").value;
+
+    const res = await fetch(`${API_URL}/user/profile/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+        credentials: "include",
+    });
+
+    const data = await res.json();
+    document.getElementById("profileMessage").innerText = data.message || data.error;
+
+    if (res.ok) {
+        alert("Profile updated successfully!");
+    }
+}
+
+async function loadProfile() {
+    const res = await fetch("/auth/profile", { credentials: "include" });
+    const data = await res.json();
+
+    if (data.user) {
+        document.getElementById("profileName").value = data.user.name;
+        document.getElementById("profileEmail").value = data.user.email;
     }
 }
 
@@ -143,14 +191,26 @@ async function logout() {
 
 // Load profile
 async function loadProfile() {
+
+    let x = document.getElementById('loginLoader');
+    x.classList.add('loader');
+
     const res = await fetch(`${API_URL}/user/profile`, { method: "GET", credentials: "include" });
     if (res.ok) {
         const data = await res.json();
-        document.getElementById("userName").innerText = data.user.name;
+        // console.log(data);
+        document.getElementById("avatar").innerHTML = `<span>${data.user.name.charAt(0)}</span>`;
+        document.getElementById("avatar").style.backgroundColor = data.user.color;
+        document.getElementById("profileName").value = data.user.name;
+        document.getElementById("profileEmail").value = data.user.email;
+        document.getElementById("profile").style.display = "block";
         document.getElementById("userProfile").style.display = "block";
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("registerForm").style.display = "none";
-        portalContainer.style.display = "none";
+        portalContainer.style.display = "block";
+        x.classList.remove('loader');
+    }else{
+        x.classList.remove('loader');
     }
 }
 

@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auth System</title>
+    <title>Firrel Software</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h2>Firrel Software</h2>
-        <div id="userProfile" style="display: none;">
-            <p><span id="userName"></span></p>
-            <br />
-            <button onclick="logout()">Logout</button>
+        <div id="userProfile" style="display: none; position: relative;">
+            <div id="avatar" onclick="toggleDropdown()"></div>
+                <div id="dropdown" class="dropdown-menu" style="display: none;">
+                <a href="#" onclick="loadProfile()">Profile</a>
+                <a href="#">Settings</a>
+                <hr >
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
         </div>
     </header>
     <div id="portal-container">
@@ -67,12 +71,15 @@
         </div>
 
         <!-- User Profile (Shown After Login) -->
-        
+        <div id="profile" style="display: none;">
+            <h2>Profile</h2>
+            <input type="text" id="profileName" placeholder="Name">
+            <input type="email" id="profileEmail" placeholder="Email">
+            <input type="password" id="profilePassword" placeholder="New Password (optional)">
+            <button onclick="updateProfile()">Update Profile</button>
+            <p id="profileMessage"></p>
+        </div>
         <div id="log"></div>
-    </div>
-    <div id="content">  
-        <h2>Content</h2>
-        <p>Welcome to the content page. You must be logged in to view this page.</p>
     </div>
     <footer>
         <p>&copy; <span id="year"></span> Firrel Software</p>
