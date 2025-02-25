@@ -121,6 +121,9 @@ header {
     font-weight: bold;
     border-bottom: 1px solid var(--loader-border-top-color);
 }
+h1{
+    color:var(--loader-border-top-color);
+}
 
 header h2{
     padding-left: 20px;
@@ -168,6 +171,7 @@ header p{
     border-radius: 5px;
     overflow: hidden;
     z-index: 1000;
+    width: 130px;
 }
 
 .dropdown-menu a,

@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firrel Software</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .home-container {
+            position: absolute;
+            justify-content: center;
+            align-items: center;
+            height: 75vh;
+            text-align: center;
+            z-index: -1;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,10 +22,10 @@
         <div id="userProfile" style="display: none; position: relative;">
             <div id="avatar" onclick="toggleDropdown()"></div>
                 <div id="dropdown" class="dropdown-menu" style="display: none;">
+                <a href="#" onclick="loadHome()">Home</a>
+                <a href="#" >Placeholder 1</a>
+                <a href="#" >Placeholder 2</a>
                 <a href="#" onclick="loadProfile()">Profile</a>
-                <a href="#">Settings</a>
-                <hr >
-                <a href="#" onclick="toggleDarkMode()">Darkmode</a>
                 <hr >
                 <a href="#" onclick="logout()">Logout</a>
             </div>
@@ -25,6 +35,9 @@
         <div id="alert">
 
         </div>
+    </div>
+    <div id="home" class="home-container">
+        <h1>Authentication Demo</h1>
     </div>
 
     <div id="portal-container">
@@ -96,10 +109,18 @@
         <div id="updateLoader" class=""></div>
         <p id="profileMessage"></p>
     </div>
+
+   
+    <script>
+
+    </script>
+
     <footer>
         <p>&copy; <span id="year"></span> Firrel Software</p>
     </footer>
 
     <script src="js.js"></script>
+
+
 </body>
 </html>
