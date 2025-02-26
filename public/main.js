@@ -3,19 +3,26 @@
 // API URL
 const API_URL = "http://localhost:3000";
 
+//#region Imports
+// Imports
+import {showError, setCurrentYear, validateEmail, clearLogMessage, sanitizeInput } from './utils.js' // import helpers for utils.js
+
+//#endregion
+
 const log = document.getElementById("log"); // store log message element
 const portalContainer = document.getElementById("portal-container"); // store portal container element
 
+//#region User aouth functions  
 
-// Function that starts the registration process
-// This function sends a POST request to the server to register a new user
-// This function is called when the user clicks the register button
+// Function that starts the registration process.
+// This function sends a POST request to the server to register a new user.
+// This function is called when the user clicks the register button.
 async function register() {
     const name = document.getElementById("regName").value; // gets the users name from the input field
     const email = document.getElementById("regEmail").value; // gets the users email from the input field
     const password = document.getElementById("regPassword").value; // gets the users password from the input field
 
-    toggleLoading("regBtn", "regLoader", true); // toggles loading state showing the loader and disabling the button
+    toggleLoading("registerBtn", "regLoader", true); // toggles loading state showing the loader and disabling the button
     showError("regError", ""); // clear errors
 
     // Fetch request to register user
@@ -26,19 +33,19 @@ async function register() {
     });
 
     const data = await res.json(); // store response data in variable
-    toggleLoading("regBtn", "regLoader", false); // toggles loading state hiding the loader and enabling the button
+    toggleLoading("registerBtn", "regLoader", false); // toggles loading state hiding the loader and enabling the button
 
     // If response is not ok, show error message
     if (!res.ok) {
         showError("regError", data.message || "Registration failed.");
     } else {
-        log.innerHTML = "Registration successful! Please validate your email. Then login.";
+        log.textContent = "Registration successful! Please validate your email. Then login.";
     }
 }
 
-// Function that starts the login process
-// This function sends a POST request to the server to login a user
-// This function is called when the user clicks the login button
+// Function that starts the login process.
+// This function sends a POST request to the server to login a user.
+// This function is called when the user clicks the login button.
 async function login() {
     const email = document.getElementById("loginEmail").value; // gets the users email from the input field
     const password = document.getElementById("loginPassword").value; // gets the users password from the input field
@@ -62,25 +69,26 @@ async function login() {
         showError("loginError", data.message || "Login failed.");
     } else {
         portalContainer.style.display = "none"; // hide registration and login parent portal container
-        log.innerHTML = "Login successful!"; // success message
+        log.textContent = "Login successful!"; // success message
         console.log('Login successful!'); // log success message
         loadAvatar()
     }
 }
 
-// Function that starts the logout process
-// This function sends a POST request to the server to logout a user
-// This function is called when the user clicks the logout button
+// Function that starts the logout process.
+// This function sends a POST request to the server to logout a user.
+// This function is called when the user clicks the logout button.
 async function logout() {
     await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
-    log.innerHTML = "Logged out!"; // logout success message
+    log.textContent = "Logged out!"; // logout success message
     window.location.reload(); // reload the page
 }
 
-// Function that starts the Update Profile process
-// This function sends a POST request to the server to update a user's profile
-// This function is called when the user clicks the update button
+// Function that starts the Update Profile process.
+// This function sends a POST request to the server to update a user's profile.
+// This function is called when the user clicks the update button.
 async function updateProfile() {
+    let isEmailUpdated = true;
     const name = document.getElementById("profileName").value; // gets the users name from the input field
     const email = document.getElementById("profileEmail").value; // gets the users email from the input field
     const password = document.getElementById("profilePassword").value; // gets the users password from the input field
@@ -92,7 +100,7 @@ async function updateProfile() {
     const res = await fetch(`${API_URL}/user/profile/update`, {
         method: "POST", // method is POST
         headers: { "Content-Type": "application/json" }, // headers are set to JSON
-        body: JSON.stringify({ name, email, password, color }), // body is the user's name, email, password and avatar color
+        body: JSON.stringify({ name, email, password, color, isEmailUpdated }), // body is the user's name, email, password and avatar color
         credentials: "include", // include credentials
     });
 
@@ -109,12 +117,11 @@ async function updateProfile() {
     }
 }
 
-// Function that starts the Forgot Password process
-// This function sends a POST request to the server to send a reset link to the user's email
-// This function is called when the user clicks the forgot password button
+// Function that starts the Forgot Password process.
+// This function sends a POST request to the server to send a reset link to the user's email.
+// This function is called when the user clicks the forgot password button.
 async function sendResetLink() {
 
-    console.log('Request reset link')
     const email = document.getElementById("forgotEmail").value; // gets the users email from the input field
 
     toggleLoading("forgotBtn", "forgotLoader", true); // toggles loading state showing the loader and disabling the button
@@ -134,160 +141,117 @@ async function sendResetLink() {
     if (!res.ok) {
         showError("forgotError", data.message || "Error sending reset link.");
     } else {
-        log.innerHTML = "Password reset link sent to your email."; // success message to user to check email
+        log.textContent = "Password reset link sent to your email."; // success message to user to check email
     }
 }
 
-// 
-// async function resetPassword() {
-//     console.log('Posting to reset password endpoint')
-//     const urlParams = new URLSearchParams(window.location.search);
-//     const token = urlParams.get("token"); // Get token from URL
-//     const newPassword = document.getElementById("newPassword").value;
-
-//     const res = await fetch(`${API_URL}/auth/reset-password`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ token, newPassword }),
-//     });
-
-//     const data = await res.json();
-//     if (!res.ok) {
-//         showError("resetError", data.message || "Failed to reset password.");
-//     } else {
-//         log.innerHTML = "Password updated successfully!";
-//         window.location.href = "index.html"; // Redirect to login
-//     }
-// }
-
-// Show Reset Password Form if Token Exists
-// window.onload = function () {
-//     if (new URLSearchParams(window.location.search).has("token")) {
-//         document.getElementById("resetPasswordForm").style.display = "block";
-//     }
-// };
-
-// Smooth form switch
-function switchToLogin() {
-    document.getElementById("registerForm").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
-}
-
-
-
-// Load avatar menu
+// Funcction that loads the avatar menu when user succsessfully logs in.
+// This function senda a GET request to the server that returns information for the avatar based on the current session.
+// This function is called when login is successfull.
 async function loadAvatar() {
-    const res = await fetch(`${API_URL}/user/profile`, { method: "GET", credentials: "include" });
+    // send a GET request tho the server for the user info
+    const res = await fetch(`${API_URL}/user/profile`, { method: "GET", credentials: "include" }); 
     if (res.ok) {
         const data = await res.json();
-        document.getElementById("avatar").innerHTML = `<span>${data.user.name.charAt(0).toUpperCase()}</span>`;
-        document.getElementById("avatar").style.backgroundColor = data.user.color;
-        document.getElementById("profileAvatar").value = data.user.color;
-        document.getElementById("userProfile").style.display = "block";
-        portalContainer.style.display = "none";
-    } else {
-       
-    }
-}
-
-// Load profile
-async function loadProfile() {
-    let x = document.getElementById('loginLoader');
-    x.classList.add('loader');
-
-    const res = await fetch(`${API_URL}/user/profile`, { method: "GET", credentials: "include" });
-    if (res.ok) {
-        const data = await res.json();
+        document.getElementById("avatar").textContent = `${data.user.name.charAt(0).toUpperCase()}`; // sisplay first character of users name in the avatar
+        document.getElementById("avatar").style.backgroundColor = data.user.color; // color the avatar with the users specific color 
+        document.getElementById("profileAvatar").value = data.user.color; 
         document.getElementById("profileName").value = data.user.name;
         document.getElementById("profileEmail").value = data.user.email;
-        document.getElementById("profile").style.display = "block";
+        document.getElementById("userAvatar").style.display = "block";
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("registerForm").style.display = "none";
         portalContainer.style.display = "none";
-        x.classList.remove('loader');
     } else {
-        x.classList.remove('loader');
+        console.warn("No sessions found")
     }
+}
+
+// Function that loads the users extended informatioin and uptade options.
+// This function displays the users profile area.
+// This funciton is called when the user clicks 'profile' on the avatar dropdown.
+function loadProfile() {
+    console.log('profile button')
+    document.getElementById("profile").style.display = "block";
+    portalContainer.style.display = "none";
 }
 
 // Check session on page load
 window.onload = loadAvatar;
 
+//#endregion
+
+//#region UI Functions and Listeners
+
+// Event listener triggered on page load completion
 document.addEventListener("DOMContentLoaded", () => {
-    // Form elements
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    const forgotForm = document.getElementById("forgotPasswordForm");
-    // const resetForm = document.getElementById("resetPasswordForm");
 
-    // Navigation Links
-    document.getElementById("toRegister").addEventListener("click", (e) => {
-        e.preventDefault();
-        showForm(registerForm);
+    // store form links in an opject 
+    const formButtons = {
+        registerBtn: [register, 'click'],
+        loginBtn: [login, 'click'],
+        logoutBtn: [logout, 'click'],
+        forgotBtn: [sendResetLink,'click'],
+        updateBtn: [updateProfile,'click'], 
+        loadProfileBtn: [loadProfile,'click'],
+        avatar: [toggleDropdown, 'click'],
+
+        // these need to be called on the event
+        loginEmail: [(e) => validateEmail('loginEmail', 'login-error-message', 'loginBtn'), 'input'],
+        regEmail: [(e) => validateEmail('regEmail', 'reg-error-message', 'registerBtn'), 'input'] ,
+        forgotEmail: [(e) => validateEmail('forgotEmail', 'forgot-error-message', 'forgotBtn'), 'input' ],
+        profileEmail: [(e) => validateEmail('profileEmail', 'update-error-message', 'updateBtn'), 'input'],
+
+        // loadHomeBtn: loadHome, // WIP : uncomment when starting this nav
+    }
+    
+    // loop through object adding event listners for each form
+    Object.keys(formButtons).forEach(id => {
+        // console.log(id)
+        document.getElementById(id)?.addEventListener(formButtons[id][1], (e) => {
+            e.preventDefault(); // prevent default <button> actions
+            formButtons[id][0](); // call the corresponding function in the object
+        });
+    });
+    
+    const loginForm = document.getElementById("loginForm"); // get login form element
+    const registerForm = document.getElementById("registerForm"); // get the registration form element
+    const forgotForm = document.getElementById("forgotPasswordForm"); // get the forgot password form element
+
+    // store form links in an opject 
+    const formLinks = {
+        toRegister: registerForm,
+        toLogin: loginForm,
+        toForgot: forgotForm,
+        backToLogin: loginForm
+    };
+    
+    // loop through object adding event listners for each form
+    Object.keys(formLinks).forEach(id => {
+        document.getElementById(id).addEventListener("click", (e) => {
+            e.preventDefault(); // Prevent default <a> actions
+            showForm(formLinks[id]);
+        });
     });
 
-    document.getElementById("toLogin").addEventListener("click", (e) => {
-        e.preventDefault();
-        showForm(loginForm);
-    });
-
-    document.getElementById("toForgot").addEventListener("click", (e) => {
-        e.preventDefault();
-        showForm(forgotForm);
-    });
-
-    document.getElementById("backToLogin").addEventListener("click", (e) => {
-        e.preventDefault();
-        showForm(loginForm);
-    });
-
-    // Show the appropriate form
+    // Function that shows the form that was clicked on
+    // This function hides all the forms then shows the selected one. 
     function showForm(form) {
         loginForm.style.display = "none";
         registerForm.style.display = "none";
         forgotForm.style.display = "none";
-        // resetForm.style.display = "none";
         form.style.display = "block";
     }
 
-    // Check for Reset Token in URL
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("token")) {
-        document.getElementById("resetToken").value = params.get("token");
-        showForm(resetForm);
-    } else {
-        showForm(loginForm); // Default to login form
-    }
+    // ? -- Pre seperate reset.html page
+    // const params = new URLSearchParams(window.location.search);
+    // if (params.has("token")) {
+    //     document.getElementById("resetToken").value = params.get("token");
+    //     showForm(resetForm);
+    // } else {
+    //     showForm(loginForm); // Default to login form
+    // }
 });
-
-
-// Set current year
-function setCurrentYear() {
-    const year = new Date().getFullYear();
-    document.getElementById("year").innerText = year;
-}
-
-// Call the function to set the year
-setCurrentYear();
-
-function validateEmail(value, err) {
-    const emailInput = document.getElementById(value, err);
-    const errorMessage = document.getElementById(err);
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    if (emailInput.value.match(emailPattern) || emailInput.value === "") {
-        errorMessage.style.display = "none";
-    } else {
-        errorMessage.style.display = "block";
-        errorMessage.innerText = 'Invalid email';
-    }
-}
-
-// Function that shows error messages
-// This function is called when an error message is needed
-function showError(elementId, message) {
-    document.getElementById(elementId).innerText = message;
-}
 
 // Function that toggles loading state of buttons and displays/hides loader animation
 // This function is called when a load state is needed
@@ -319,12 +283,11 @@ document.addEventListener("click", function(event) {
     }
 });
 
-// Clear log message every 30 seconds
-function clearLogMessage() {
-    setInterval(() => {
-        log.innerHTML = '';
-    }, 30000);
-}
+//#endregion
 
+
+// Imported utility function calls 
 // Start clearing log messages
 clearLogMessage();
+// Set the current year in the footer
+setCurrentYear();

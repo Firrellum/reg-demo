@@ -2,12 +2,12 @@
 // It imports the necessary packages, loads environment variables, and creates a new Pool object for connecting to the database.
 // It also exports the pool for use in other parts of the application.
 
-import pkg from "pg"; // import pg-promise for connecting to PostgreSQL
+import pkg from "pg"; // import pg for connecting to PostgreSQL
 import dotenv from "dotenv";  // import dotenv for environment variables
 
 // Load environment variables from .env file
 dotenv.config();  
-// Destruct a Pool object from pg-promise
+// Destruct a Pool object from pg
 const { Pool } = pkg; 
 
 // Create a new Pool with the connection string 

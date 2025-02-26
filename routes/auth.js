@@ -1,6 +1,6 @@
 // This file contains authentication routes for the application. 
 // It includes routes for registering, logging in, verifying email, and resetting passwords. 
-// The routes use bcrypt for password hashing, crypto for generating random tokens, and nodemailer for sending emails. 
+// The routes use bcryptjs for password hashing, crypto for generating random tokens, and nodemailer for sending emails. 
 // The routes also interact with the database using the pool object from db.js.
 
 //#region Imports
@@ -69,6 +69,7 @@ router.post("/register", async (req, res) => {
 // This route logs in a user with an email and password.
 // It checks the user's credentials and updates the session with user details.
 router.post("/login", async (req, res) => {
+    // console.log('login request')
     const { email, password } = req.body; // destruct email and password from the request body
 
     if (!email || !password) { // check if email or password is missing
@@ -78,16 +79,19 @@ router.post("/login", async (req, res) => {
     try {
         const userResult = await pool.query("SELECT * FROM users WHERE email = $1", [email]); // select user with the provided email
         if (userResult.rows.length === 0) {
-            return res.status(400).json({ error: "Invalid email or password" }); // invalid email or password message
+            // console.log('no users with that email found')
+            return res.status(400).json({ error: "Invalid email" }); // invalid email or password message
         }
 
         const user = userResult.rows[0]; // get the user from the result
         if (!user.is_verified) {
+            console.log('user not verified')
             return res.status(400).json({ error: "Please verify your email before logging in" }); // success message
         }
 
         const isMatch = await bcrypt.compare(password, user.password); // compare the provided password with the hashed password
         if (!isMatch) {
+            // console.log('password mismatch')
             return res.status(400).json({ error: "Invalid email or password" }); // no match message
         }
 
@@ -96,13 +100,14 @@ router.post("/login", async (req, res) => {
 
         res.json({ message: "Login successful", user: req.session.user }); // login success message
     } catch (error) {
+        console.log('Another error', error)
         console.error(error);
         res.status(500).json({ error: "Server error" }); // error message
     }
 });
 
 // Logout route
-// This route logs out a user by destroying the session and clearing the cookie.
+// This route logs out a user, destroys the session and clears the cookie.
 router.post("/logout", (req, res) => {
     req.session.destroy((err) => { // destroy the session
         if (err) {
@@ -146,7 +151,17 @@ router.get("/verify-email", async (req, res) => {
 
         const user = userResult.rows[0]; // get the user from the result
 
-        await pool.query("UPDATE users SET verification_token = NULL, verification_expiry = NULL, is_verified = TRUE, email = new_email, new_email = NULL WHERE id = $1", [user.id]); // update the user's verification status
+        // update updated user email when verified
+        await pool.query(
+            `UPDATE users 
+             SET verification_token = NULL, 
+                 verification_expiry = NULL, 
+                 is_verified = TRUE, 
+                 email = COALESCE(new_email, email), 
+                 new_email = NULL 
+             WHERE id = $1`, 
+            [user.id]
+          );
 
         res.json({ message: "Email verified successfully" }); // success message
     } catch (error) {
@@ -262,7 +277,3 @@ function generateRandomColor() {
 //#endregion
 
 export default router; // export the router for use elsewere in the application
-
-
-
-

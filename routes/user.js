@@ -2,7 +2,7 @@
 // It includes routes for getting the user profile and updating the user profile.
 // The update route updates the user's name, email, password, and color.
 // It also sends a verification email if the email is changed.
-// The profile route returns the user's profile information.
+// The profile route returns the user's session information.
 // The routes are protected by the isAuthenticated middleware.
 
 //#region Imports
@@ -48,8 +48,8 @@ router.post("/profile/update", isAuthenticated, async (req, res) => {
             const verificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // set verification expiry to 24 hours 
 
             // update users name, color, verification token, verification expiry, and new email
-            query = "UPDATE users SET name = $1, color = $2, verification_token = $3, verification_expiry = $4, new_email = $5 WHERE id = $6 RETURNING id, name, email, color"; 
-            values = [name, color, verificationToken, verificationExpiry, email, userId]; // update values to include verification token, verification expiry, and new email
+            query = "UPDATE users SET name = $1, color = $2, verification_token = $3, verification_expiry = $4, new_email = $5, is_verified = NULL WHERE id = $6 RETURNING id, name, email, color"; 
+            values = [name, color, verificationToken, verificationExpiry, email, userId ]; // update values to include verification token, verification expiry, and new email
 
             const verificationLink = `http://localhost:3000/verify.html?token=${verificationToken}`; // generate verification link
             const verifyEmail = getEmail('verify', { name: name, link: verificationLink }); // get verify email template

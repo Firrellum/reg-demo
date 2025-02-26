@@ -27,6 +27,34 @@ app.use(express.json());
 // Use the public directory for static files 
 app.use(express.static('public'));  
 
+// Set CSP headers
+app.use((req, res, next) => {
+    // Content Security Policy (CSP) - Restricts resource loading to prevent XSS attacks
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'");
+
+    // Strict-Transport-Security (HSTS) - Forces HTTPS to prevent MITM attacks
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+    // X-Content-Type-Options - Prevents MIME type sniffing (protects against content-type spoofing)
+    res.setHeader("X-Content-Type-Options", "nosniff");
+
+    // X-Frame-Options - Prevents clickjacking by disallowing the page from being embedded in iframes
+    res.setHeader("X-Frame-Options", "DENY");
+
+    // X-XSS-Protection - Enables browser’s built-in XSS protection (useful for older browsers)
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+
+    // Referrer-Policy - Controls what information is sent in the Referer header when navigating to another page
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+
+    // Permissions-Policy - Restricts browser access to sensitive APIs like camera, microphone, geolocation, etc.
+    res.setHeader("Permissions-Policy", "geolocation=(self), microphone=(), camera=(), payment=()");
+
+    // Call next() to continue processing the request
+    next();
+});
+
+
 // Create a new session store with the pool
 const pgStore = pgSession(session);  
 
