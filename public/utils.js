@@ -36,6 +36,57 @@ export function sanitizeInput(input) {
 }
 
 
+export function validatePassword(value, err, btn, log){
+    const passwordInput = document.getElementById(value);
+    const errorMessage = document.getElementById(err);
+    const disableBtn = document.getElementById(btn);
+    const passordHelper = document.getElementById(log);
+    passordHelper.style.display = 'flex';
+
+    // console.log(passwordInput.value)
+    passwordInput.value = sanitizeInput(passwordInput.value)
+
+    const passwordRequirements = {
+        uppercase: /[A-Z]/,
+        digit: /\d/,
+        specialChar: /[@$!%*?&]/,
+        length: /^.{8,}$/
+    }
+
+    let checks = {
+        uppercase: passwordRequirements.uppercase.test(sanitizeInput(passwordInput.value)),
+        digit: passwordRequirements.digit.test(sanitizeInput(passwordInput.value)),
+        specialChar: passwordRequirements.specialChar.test(sanitizeInput(passwordInput.value)),
+        length: passwordRequirements.length.test(sanitizeInput(passwordInput.value)),
+    }
+
+    const messages = [
+        {text: "Must include uppercase", passed: checks.uppercase},
+        {text: "Must include a number", passed: checks.digit},
+        {text: "Must include a scecial character", passed: checks.specialChar},
+        {text: "Must include at least 8 characters", passed: checks.length},
+    ]
+
+    passordHelper.innerText = '';
+
+    messages.forEach(msg => {
+        const p = document.createElement('p')
+        p.textContent = msg.text + " "
+        const span = document.createElement('span')
+        span.textContent = msg.passed ? '[tick]' : '[x]'
+        span.style.color = msg.passed ? 'yellowgreen' : 'red'
+        p.appendChild(span)
+        passordHelper.appendChild(p)
+    })
+
+    if(checks.uppercase && checks.digit && checks.specialChar && checks.length){
+        disableBtn.disabled = false;
+    }else{
+       disableBtn.disabled = true;
+    }
+
+}
+
 // Clear log message every 30 seconds
 export function clearLogMessage() {
     setInterval(() => {
@@ -47,4 +98,19 @@ export function clearLogMessage() {
 export function setCurrentYear() {
     const year = new Date().getFullYear();
     document.getElementById("year").innerText = year;
+}
+
+
+// Function to clean up / set defaults
+// This will clean up the Ui
+export function setDefaultPasswordHelperState(element){
+    console.log('setstate')
+    const targetElement = document.getElementById(element);
+    if (targetElement) { 
+        console.log('setting..')
+        targetElement.style.display = 'none';
+        targetElement.innerText = 'waiting..';
+    } else {
+        console.warn(`Element with ID "${element}" not found.`);
+    }
 }

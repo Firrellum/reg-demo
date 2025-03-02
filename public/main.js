@@ -5,7 +5,7 @@ const API_URL = "http://localhost:3000";
 
 //#region Imports
 // Imports
-import {showError, setCurrentYear, validateEmail, clearLogMessage, sanitizeInput } from './utils.js' // import helpers for utils.js
+import {showError, setCurrentYear, validateEmail, clearLogMessage, sanitizeInput, validatePassword, setDefaultPasswordHelperState } from './utils.js' // import helpers for utils.js
 
 //#endregion
 
@@ -92,7 +92,7 @@ async function updateProfile() {
     const name = document.getElementById("profileName").value; // gets the users name from the input field
     const email = document.getElementById("profileEmail").value; // gets the users email from the input field
     const password = document.getElementById("profilePassword").value; // gets the users password from the input field
-    const color = document.getElementById("profileAvatar").value; // gets the users avatar color from the input field
+    const color = document.getElementById("profileAvatarColor").value; // gets the users avatar color from the input field
 
     toggleLoading("updateBtn", "updateLoader", true); // toggles loading state showing the loader and disabling the button
 
@@ -121,7 +121,6 @@ async function updateProfile() {
 // This function sends a POST request to the server to send a reset link to the user's email.
 // This function is called when the user clicks the forgot password button.
 async function sendResetLink() {
-
     const email = document.getElementById("forgotEmail").value; // gets the users email from the input field
 
     toggleLoading("forgotBtn", "forgotLoader", true); // toggles loading state showing the loader and disabling the button
@@ -153,9 +152,22 @@ async function loadAvatar() {
     const res = await fetch(`${API_URL}/user/profile`, { method: "GET", credentials: "include" }); 
     if (res.ok) {
         const data = await res.json();
+        // updates to the profile avatar
+        let profileAvatarPicture = document.getElementById('profileAvatar')
+
+        profileAvatarPicture.style.backgroundColor = data.user.color
+        profileAvatarPicture.textContent = `${data.user.name.charAt(0).toUpperCase()}`;
+
+        //update profile name
+        let profileName = document.getElementById('name-header')
+
+        // profileName.textContent = `${data.user.name}'s Profile`
+
+
+        
         document.getElementById("avatar").textContent = `${data.user.name.charAt(0).toUpperCase()}`; // sisplay first character of users name in the avatar
         document.getElementById("avatar").style.backgroundColor = data.user.color; // color the avatar with the users specific color 
-        document.getElementById("profileAvatar").value = data.user.color; 
+        document.getElementById("profileAvatarColor").value = data.user.color; 
         document.getElementById("profileName").value = data.user.name;
         document.getElementById("profileEmail").value = data.user.email;
         document.getElementById("userAvatar").style.display = "block";
@@ -172,7 +184,7 @@ async function loadAvatar() {
 // This funciton is called when the user clicks 'profile' on the avatar dropdown.
 function loadProfile() {
     console.log('profile button')
-    document.getElementById("profile").style.display = "block";
+    document.getElementById("profile").style.display = "flex";
     portalContainer.style.display = "none";
 }
 
@@ -186,34 +198,41 @@ window.onload = loadAvatar;
 // Event listener triggered on page load completion
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Button pressing and form checking section
+
     // store form links in an opject 
     const formButtons = {
         registerBtn: [register, 'click'],
         loginBtn: [login, 'click'],
         logoutBtn: [logout, 'click'],
-        forgotBtn: [sendResetLink,'click'],
-        updateBtn: [updateProfile,'click'], 
-        loadProfileBtn: [loadProfile,'click'],
+        forgotBtn: [sendResetLink, 'click'],
+        updateBtn: [updateProfile, 'click'], 
+        loadProfileBtn: [loadProfile, 'click'],
         avatar: [toggleDropdown, 'click'],
 
         // these need to be called on the event
         loginEmail: [(e) => validateEmail('loginEmail', 'login-error-message', 'loginBtn'), 'input'],
-        regEmail: [(e) => validateEmail('regEmail', 'reg-error-message', 'registerBtn'), 'input'] ,
-        forgotEmail: [(e) => validateEmail('forgotEmail', 'forgot-error-message', 'forgotBtn'), 'input' ],
+        regEmail: [(e) => validateEmail('regEmail', 'reg-error-message', 'registerBtn'), 'input'],
+        forgotEmail: [(e) => validateEmail('forgotEmail', 'forgot-error-message', 'forgotBtn'), 'input'],
         profileEmail: [(e) => validateEmail('profileEmail', 'update-error-message', 'updateBtn'), 'input'],
+
+        loginPassword: [(e) => validatePassword('loginPassword', 'login-error-message','loginBtn', 'allpasswords'), 'input', ],
+        regPassword: [(e) => validatePassword('regPassword', 'reg-error-message', 'registerBtn', 'allpasswords'), 'input', ],
+        profilePassword: [(e) => validatePassword('profilePassword', 'update-error-message', 'updateBtn', 'allpasswords'), 'input', ],
 
         // loadHomeBtn: loadHome, // WIP : uncomment when starting this nav
     }
     
     // loop through object adding event listners for each form
     Object.keys(formButtons).forEach(id => {
-        // console.log(id)
         document.getElementById(id)?.addEventListener(formButtons[id][1], (e) => {
-            e.preventDefault(); // prevent default <button> actions
+            e.preventDefault(); // prevent default <button>/<a> actions
+            setDefaultPasswordHelperState('allpasswords')
             formButtons[id][0](); // call the corresponding function in the object
         });
     });
-    
+
+    // Form stitching Section
     const loginForm = document.getElementById("loginForm"); // get login form element
     const registerForm = document.getElementById("registerForm"); // get the registration form element
     const forgotForm = document.getElementById("forgotPasswordForm"); // get the forgot password form element
@@ -230,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(formLinks).forEach(id => {
         document.getElementById(id).addEventListener("click", (e) => {
             e.preventDefault(); // Prevent default <a> actions
+            setDefaultPasswordHelperState('allpasswords')
             showForm(formLinks[id]);
         });
     });
@@ -243,15 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
         form.style.display = "block";
     }
 
-    // ? -- Pre seperate reset.html page
-    // const params = new URLSearchParams(window.location.search);
-    // if (params.has("token")) {
-    //     document.getElementById("resetToken").value = params.get("token");
-    //     showForm(resetForm);
-    // } else {
-    //     showForm(loginForm); // Default to login form
-    // }
 });
+
+
 
 // Function that toggles loading state of buttons and displays/hides loader animation
 // This function is called when a load state is needed

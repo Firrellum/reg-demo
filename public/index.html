@@ -89,17 +89,22 @@
         <div id="log"></div>
     </div>
     <div id="profile" style="display: none;">
-        <h2>Profile</h2>
+        <div id="profileAvatar" class="profileAvatarPicture"></div>
+        <br />
+        <!-- <h2 id="name-header"> ... </h2> -->
         <input type="text" id="profileName" placeholder="Name">
+        <input type="text" id="profileImage" placeholder="Avatar Image URL">
+        <input type="color" id="profileAvatarColor" name="profileColor" value="#000000">
         <input type="email" id="profileEmail" placeholder="Email">
         <p id="update-error-message" class="error-message"></p>
-        <input type="color" id="profileAvatar" name="profileColor" value="#000000">
         <input type="password" id="profilePassword" placeholder="New Password (optional)">
         <button id="updateBtn" >Update Profile</button>
         <div id="updateLoader" class=""></div>
         <p id="profileMessage"></p>
     </div>
-
+    
+    <div id="allpasswords"></div>
+    </div>
    
     <script>
 

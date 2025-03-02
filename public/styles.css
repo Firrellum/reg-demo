@@ -8,84 +8,50 @@
 
 :root {
     --primary-color: #ff6600;
-    --primary-color-negative: #0099ff;
-
     --secondary-color: #000000;
-    --secondary-color-negative: #ffffff;
-
     --background-color: #f8f9fa;
-    --background-color-negative: #070606;
-
     --text-color: #000000;
-    --text-color-negative: #ffffff;
-
     --error-color: red;
-    
     --input-border-color: #ccc;
-    --input-border-color-negative: #333;
-
     --button-hover-color: #cc5200;
-    --button-hover-color-negative: #339dff;
-
     --loader-border-color: #f3f3f3;
-    --loader-border-color-negative: #0c0c0c;
-
     --loader-border-top-color: #ff6600;
-    --loader-border-top-color-negative: #0099ff;
-
     --gradient-1: #370270;
-    --gradient-1-negative: #ffffff;
     --gradient-2: #070707;
-    --gradient-2-negative: #a3a3a3;
-    --gradient-3: #160038;
-    --gradient-3-negative: #cccbcb;
-
+    --gradient-3: #000000;
     --body-color: #ccc;
-    --body-color-negative: #333;
-
     --header-bg-color: #38015234;
-    --header-bg-color-negative: #ffffff;
-
     --header-text-color: #ffffff;
-    --header-text-color-negative: #000000;
-
     --avatar-text-shadow: 2px 2px 5px #000;
-    --avatar-text-shadow-negative: 2px 2px 5px #1a1919;
-
     --dropdown-bg-color: #7d01a336;
-    --dropdown-bg-color-negative: #ffffff33;
     --dropdown-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    --dropdown-box-shadow-negative: 0 2px 10px rgba(0, 0, 0, 0.1);
     --dropdown-border-color: 1px solid #ccc;
-    --dropdown-border-color-negative: 1px solid #333;
     --dropdown-menu-hover: #56038611;
-    --dropdown-menu-hover-negative: #a9fc79ee;
-
     --input-bg-color: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(117, 137, 150, 0.25) 100%);
-    --input-bg-color-negative: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(117, 137, 150, 0.75) 100%);
-
     --loader-border-color: #f3f3f3 #f3f3f3 transparent;
-    --loader-border-color-negative: #0c0c0c #0c0c0c transparent;
     --loader-border-after-color: transparent #ff6600 #ff6600;
-    --loader-border-after-color-negative: transparent #0099ff #0099ff;
-
 }
 
 /* General styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(-25deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
     background-size: 200% 200%;
-    animation: pulseBackground 15s infinite ease-in-out;
     color: var(--body-color);
-}
-.body-negative{
-    background: linear-gradient(-25deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
+    gap:10px;
+    background: 
+    linear-gradient(165deg, var(--gradient-1), var(--gradient-2), var(--gradient-3)), 
+    repeating-linear-gradient(0deg, #353535 0px, #353535 100px, transparent 100px, transparent 200px), 
+    repeating-linear-gradient(90deg, #353535 0px, #353535 100px, transparent 100px, transparent 200px); 
+    background-size: cover;
+    background-blend-mode: overlay; 
+    animation: pulseBackground 15s infinite ease-in-out;
 }
 
 @keyframes pulseBackground {
@@ -148,7 +114,7 @@ header p{
 }
 
 #avatar {
-    
+    /* font-size: small; */
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -159,7 +125,7 @@ header p{
     margin: auto;
     cursor: pointer;
     border: 2px solid var(--loader-border-top-color);
-    text-shadow: var(--avatar-text-shadow);
+    /* text-shadow: var(--avatar-text-shadow); */
 }
 
 .dropdown-menu {
@@ -224,12 +190,12 @@ h2{
     color: var(--primary-color);
 }
 
-#userProfile{
+/* #userProfile{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-}
+} */
 
 /* Container styling */
 #portal-container {
@@ -240,6 +206,25 @@ h2{
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--primary-color);
+}
+
+#profile{
+    /* display: flex; */
+    width:480px;
+    max-width: 480px;
+    flex-direction: column;
+    align-items: center;
+    text-shadow: 2px 2px 5px black;
+}
+
+.profileAvatarPicture{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 5px;
+    
 }
 
 /* Input fields */
@@ -268,6 +253,30 @@ input:focus {
     border-color: var(--primary-color);
 }
 
+#allpasswords{
+    /* font-family: Arial, sans-serif; */
+    font-size: small;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    height: auto;
+    background-color: rgba(255, 68, 0, 0.151);
+    border: 1px solid #ff6600;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+#allpasswords p{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 300px;
+}
+
+
+
 /* Button styling */
 button {
     width: 100%;
@@ -278,9 +287,10 @@ button {
     border-radius: 16px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    
+    transition: background-color 0.3s ease-in-out; 
 }
+
+
 
 button:hover{
     border: 1px solid #f5eae3;
