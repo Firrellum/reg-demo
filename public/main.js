@@ -1,7 +1,7 @@
 // This file contains the client-side JavaScript code for the authentication system.
 
 // API URL
-const API_URL = "http://localhost:3000";
+const API_URL = "https://reg-demo.onrender.com";
 
 //#region Imports
 // Imports

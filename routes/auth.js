@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
             [name, email, hashedPassword, color, verificationToken, verificationExpiry]
         );
 
-        const verifyEmail = getEmail('verify', { name, link: `http://localhost:3000/verify.html?token=${verificationToken}`}); // get email template for verification
+        const verifyEmail = getEmail('verify', { name, link: `https://reg-demo.onrender.com/verify.html?token=${verificationToken}`}); // get email template for verification
 
         const mailOptions = { // create email options
             from: "Firrel Software <no-reply@firrelsoftware.com>",
@@ -180,7 +180,7 @@ router.post("/forgot-password", async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex"); // generate a reset token
     await pool.query("UPDATE users SET reset_token = $1, reset_expiry = NOW() + INTERVAL '1 hour' WHERE email = $2",[token, email]); // updae the user with the reset token
 
-    const resetEmail = getEmail('reset', { name: user.rows[0].name, link: `http://localhost:3000/reset.html?token=${token}` }); // get email template for reset
+    const resetEmail = getEmail('reset', { name: user.rows[0].name, link: `https://reg-demo.onrender.com/reset.html?token=${token}` }); // get email template for reset
 
     const mailOptions = { // create email options
         from: "Firrel Software <no-reply@firrelsoftware.com>",

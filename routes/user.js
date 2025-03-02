@@ -51,7 +51,7 @@ router.post("/profile/update", isAuthenticated, async (req, res) => {
             query = "UPDATE users SET name = $1, color = $2, verification_token = $3, verification_expiry = $4, new_email = $5, is_verified = NULL WHERE id = $6 RETURNING id, name, email, color"; 
             values = [name, color, verificationToken, verificationExpiry, email, userId ]; // update values to include verification token, verification expiry, and new email
 
-            const verificationLink = `http://localhost:3000/verify.html?token=${verificationToken}`; // generate verification link
+            const verificationLink = `https://reg-demo.onrender.com/verify.html?token=${verificationToken}`; // generate verification link
             const verifyEmail = getEmail('verify', { name: name, link: verificationLink }); // get verify email template
 
             const mailOptions = { // set mail options
