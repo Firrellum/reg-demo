@@ -6,3 +6,4 @@
 
 #ignored files
 .env
+.gitignore
